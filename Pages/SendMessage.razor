@@ -1,0 +1,45 @@
+﻿@page "/sendmessage"
+@using _3D.Test.App.Data.Models.Requests
+@inject _3D.Test.App.Data.Interfaces.IMessageService ObjIMessageService
+@inject NavigationManager NavigationManager
+<h2>Send A Message</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Recipient" class="control-label">Recipient</label>
+                <input for="Recipient" class="form-control" @bind="@formData.Recipient" />
+            </div>
+            <div class="form-group">
+                <label for="Subject" class="control-label">Subject</label>
+                <input for="Subject" class="form-control" @bind="@formData.Subject" />
+            </div>
+            <div class="form-group">
+                <label for="Country" class="control-label">Body</label>
+                <input for="Country" class="form-control" @bind="@formData.Body" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateMessage" value="Save" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    MessageAddRequest formData = new MessageAddRequest();
+    protected void CreateMessage()
+    {
+        ObjIMessageService.AddMessage(formData);
+        NavigationManager.NavigateTo("sendmessage");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+} 
