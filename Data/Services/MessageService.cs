@@ -19,12 +19,11 @@ namespace _3D.Test.App.Data.Services
         // string profileName = "This is where you'll enter your dbmail profile name"
         string profileName = "3D_Test";
 
-        public ActionResult<ItemResponse<int>> AddMessage(MessageAddRequest model)
+        public int AddMessage(MessageAddRequest model)
         {
             int id = 0;
-            BaseResponse response;
-            try
-            {
+            
+            
                 string procName = "[dbo].[Messages_Insert]";
                 _data.ExecuteNonQuery(procName, paramMapper: delegate (SqlParameterCollection col)
                 {
@@ -44,13 +43,7 @@ namespace _3D.Test.App.Data.Services
 
                     int.TryParse(oId.ToString(), out id);
                 });
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-            return id;
+            return id;                        
         }
 
         private static void commonParams(MessageAddRequest model, SqlParameterCollection col, int userId)

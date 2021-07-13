@@ -6,6 +6,6 @@ namespace _3D.Test.App.Data.Interfaces
 {
     public interface IMessageService
     {
-        ActionResult<ItemResponse<int>> AddMessage(MessageAddRequest model);
+        int AddMessage(MessageAddRequest model);
     }
 }
