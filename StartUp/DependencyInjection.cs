@@ -1,4 +1,6 @@
-﻿using _3D.Test.App.Data;
+﻿using _3D.Test.App.Controllers;
+using _3D.Test.App.Data;
+using _3D.Test.App.Data.Interfaces;
 using _3D.Test.App.Data.Providers;
 using _3D.Test.App.Data.Services;
 using _3D.Test.App.StartUp.ConfigureDI;
@@ -27,12 +29,13 @@ namespace _3D.Test.App.StartUp
             string connString = configuration.GetConnectionString("Default");
 
             services.AddSingleton<IMessageService, MessageService>();
-            services.AddSingleton<_3D.Test.App.Data.Providers.ISqlDataProvider, SqlDataProvider>(delegate (IServiceProvider provider)
+            services.AddSingleton<_3D.Test.App.Data.Interfaces.ISqlDataProvider, SqlDataProvider>(delegate (IServiceProvider provider)
             {
                 return new SqlDataProvider(connString);
             });
 
-
+            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<EmailApiController>();
 
 
             GetAllEntities().ForEach(tt =>

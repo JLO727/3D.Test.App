@@ -1,10 +1,13 @@
+using _3D.Test.App.Controllers;
 using _3D.Test.App.Data;
 using _3D.Test.App.Data.Services;
 using _3D.Test.App.StartUp;
+using Blazored.Toast;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,7 +34,10 @@ namespace _3D.Test.App
             services.AddRazorPages();
             services.AddServerSideBlazor();
             DependencyInjection.ConfigureServices(services, Configuration);
-            services.AddSingleton<WeatherForecastService>();
+            services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddHttpClient();
+            services.AddControllersWithViews();
+            services.AddBlazoredToast();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
