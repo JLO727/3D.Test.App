@@ -45,17 +45,12 @@
 @code {
     private MessageAddRequest message = new MessageAddRequest();
     private EditContext _editContext;
-    private bool _isInvalidForm = true;
+    
 
 
     protected override void OnInitialized()
     {
-        _editContext = new EditContext(message);
-
-        _editContext.OnFieldChanged += (x, y) =>
-        {
-            _isInvalidForm = !_editContext.Validate();
-        };
+        _editContext = new EditContext(message);      
 
     }
 
@@ -71,7 +66,8 @@
         }
         else
         {
-            toastService.ShowError("Please check your input and try again!");        }
+            toastService.ShowError("Please check your input and try again!");   
+        }
 
     }
 
