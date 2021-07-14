@@ -9,7 +9,7 @@
 
 <h2>Send A Message</h2>
 <hr />
-<EditForm Model="@message" OnValidSubmit="HandleValidSubmit">
+<EditForm EditContext="@_editContext" OnSubmit="Submit">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="row content">
@@ -17,21 +17,25 @@
             <div class="form-group">
                 <label for="Recipient" class="control-label">Recipient</label>
                 <input for="Recipient" class="form-control" @bind="@message.Recipient" placeholder="email@domain.com" />
+                <ValidationMessage For="@(() => message.Recipient)"></ValidationMessage>
             </div>
             <div class="form-group">
                 <label for="Subject" class="control-label">Subject</label>
                 <input for="Subject" class="form-control" @bind="@message.Subject" placeholder="required" />
+                <ValidationMessage For="@(() => message.Subject)"></ValidationMessage>
             </div>
             <div class="form-group">
                 <label for="Country" class="control-label">Message</label>
                 <input for="Country" class="form-control" @bind="@message.Body" placeholder="Max 300" />
+                <ValidationMessage For="@(() => message.Body)"></ValidationMessage>
+
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <button type="submit" class="btn btn-outline-success" @onclick="@(() => toastService.ShowSuccess("Email Sent!!"))">Send</button>
+                <button type="submit" class="btn btn-outline-success" >Send</button>
                 <input type="button" class="btn btn-outline-danger" @onclick="@Cancel" value="Cancel" />
             </div>
         </div>
@@ -39,14 +43,34 @@
 </EditForm>
 
 @code {
-    MessageAddRequest message = new MessageAddRequest();
+    private MessageAddRequest message = new MessageAddRequest();
+    private EditContext _editContext;
 
-    protected void HandleValidSubmit()
+
+    protected override void OnInitialized()
     {
-        EmailApiController.AddMessage(message);
-        NavigationManager.NavigateTo("/sendmessage");
-        message = new MessageAddRequest();
+        _editContext = new EditContext(message);
+
     }
+
+    protected void Submit()
+    {
+        if (_editContext.Validate())
+        {
+
+            EmailApiController.AddMessage(message);
+            NavigationManager.NavigateTo("/sendmessage");
+            toastService.ShowSuccess("Email Sent!!");
+            message = new MessageAddRequest();
+        }
+        else
+        {
+            toastService.ShowError("Please check your input and try again!");    
+        }
+
+    }
+
+  
     void Cancel()
     {
         toastService.ShowInfo("Cancelled");
