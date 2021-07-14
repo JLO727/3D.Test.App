@@ -1,45 +1,55 @@
 ﻿@page "/sendmessage"
-@using _3D.Test.App.Data.Models.Requests
+@using _3D.Test.App.Data.Models.Requests;
+@using _3D.Test.App.Data.Models;
 @inject _3D.Test.App.Data.Interfaces.IMessageService ObjIMessageService
+@inject _3D.Test.App.Controllers.EmailApiController EmailApiController
 @inject NavigationManager NavigationManager
+@inject IToastService toastService
+
+
 <h2>Send A Message</h2>
 <hr />
-<form>
-    <div class="row">
+<EditForm Model="@message" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="row content">
         <div class="col-md-8">
             <div class="form-group">
                 <label for="Recipient" class="control-label">Recipient</label>
-                <input for="Recipient" class="form-control" @bind="@formData.Recipient" />
+                <input for="Recipient" class="form-control" @bind="@message.Recipient" placeholder="email@domain.com" />
             </div>
             <div class="form-group">
                 <label for="Subject" class="control-label">Subject</label>
-                <input for="Subject" class="form-control" @bind="@formData.Subject" />
+                <input for="Subject" class="form-control" @bind="@message.Subject" placeholder="required" />
             </div>
             <div class="form-group">
-                <label for="Country" class="control-label">Body</label>
-                <input for="Country" class="form-control" @bind="@formData.Body" />
+                <label for="Country" class="control-label">Message</label>
+                <input for="Country" class="form-control" @bind="@message.Body" placeholder="Max 300" />
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <input type="button" class="btn btn-primary" @onclick="@CreateMessage" value="Save" />
-                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+                <button type="submit" class="btn btn-outline-success" @onclick="@(() => toastService.ShowSuccess("Email Sent!!"))">Send</button>
+                <input type="button" class="btn btn-outline-danger" @onclick="@Cancel" value="Cancel" />
             </div>
         </div>
     </div>
-</form>
+</EditForm>
 
 @code {
-    MessageAddRequest formData = new MessageAddRequest();
-    protected void CreateMessage()
+    MessageAddRequest message = new MessageAddRequest();
+
+    protected void HandleValidSubmit()
     {
-        ObjIMessageService.AddMessage(formData);
-        NavigationManager.NavigateTo("sendmessage");
+        EmailApiController.AddMessage(message);
+        NavigationManager.NavigateTo("/sendmessage");
+        message = new MessageAddRequest();
     }
     void Cancel()
     {
-        NavigationManager.NavigateTo("/");
+        toastService.ShowInfo("Cancelled");
+        NavigationManager.NavigateTo("/sendmessage");
     }
 } 

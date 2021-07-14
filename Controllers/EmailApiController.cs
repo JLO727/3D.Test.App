@@ -22,8 +22,8 @@ namespace _3D.Test.App.Controllers
 
         }
         [AllowAnonymous]
-        [HttpPost("sent")]
-        public ActionResult<SuccessResponse> PostEmail(MessageAddRequest model)
+        [HttpPost("send")]
+        public ActionResult<SuccessResponse> AddMessage(MessageAddRequest model)
         {
             int code = 200;
             BaseResponse response = null;
